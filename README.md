@@ -17,7 +17,7 @@ class ByteBankApp extends StatelessWidget {
 }
 ```
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1253af13-d576-4af4-823e-4acca0cb717f/Untitled.png)
+![Untitled](https://user-images.githubusercontent.com/68503415/147161128-e6b005d6-db6b-4941-9bc3-75bf1579dc7b.png)
 
 Na página de ListaTransferencias() terá um widget `ListView.builder` onde estarão as transferências realizadas na página FormulariosTransferencias.
 

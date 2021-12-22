@@ -1,96 +1,75 @@
-# [![Flutter logo][]][flutter.dev]
+Projeto criado em Flutter para simular transferências.
 
-[![Build Status - Cirrus][]][Build status]
-[![Discord badge][]][Discord instructions]
-[![Twitter handle][]][Twitter badge]
+No main inserimos qual vai ser a página que iniciará o projeto. Esse projeto será iniciado com ListaTransferencias(). E o tema, nesse caso o escolhido foi o Dark.
 
-Flutter is Google's SDK for crafting beautiful, fast user experiences for
-mobile, web, and desktop from a single codebase. Flutter works with existing
-code, is used by developers and organizations around the world, and is free
-and open source.
+```dart
+void main() => runApp(ByteBankApp());
 
-## Documentation
+class ByteBankApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData.dark(),
+      home: ListaTransferencias(),
 
-* [Install Flutter](https://flutter.dev/get-started/)
-* [Flutter documentation](https://flutter.dev/docs)
-* [Development wiki](https://github.com/flutter/flutter/wiki)
-* [Contributing to Flutter](https://github.com/flutter/flutter/blob/master/CONTRIBUTING.md)
+    );
+  }
+}
+```
 
-For announcements about new releases and breaking changes, follow the
-[flutter-announce@googlegroups.com](https://groups.google.com/forum/#!forum/flutter-announce)
-mailing list or see the
-[breaking changes](https://flutter.dev/docs/release/breaking-changes) page.
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1253af13-d576-4af4-823e-4acca0cb717f/Untitled.png)
 
-## Terms of service
+Na página de ListaTransferencias() terá um widget `ListView.builder` onde estarão as transferências realizadas na página FormulariosTransferencias.
 
-The Flutter tool may occasionally download resources from Google servers. By downloading or using the Flutter SDK you agree to the Google Terms of Service: https://policies.google.com/terms
+Terá também um botão com um Icon de add além de um void que atualizará as transferências nessa página.
 
-For example, when installed from GitHub (as opposed to from a prepackaged archive), the Flutter tool will download the Dart SDK from Google servers immediately when first run, as it is used to execute the "flutter" tool itself. This will also occur when Flutter is upgraded (e.g. by running the "flutter upgrade" command).
+```dart
+void _atualiza(Transferencia? transferenciaRecebida) {
+    if(transferenciaRecebida != null) {
+      setState((){
+        widget._transferencias.add(transferenciaRecebida);
+      });
+    }
+  }
+}
+```
 
-## About Flutter
+Os card são editados em uma classe ItemTransferencia .
 
-We think Flutter will help you create beautiful, fast apps, with a productive,
-extensible and open development model.
+```dart
+class ItemTransferencia extends StatelessWidget {
+  final Transferencia _transferencia;
 
-### Beautiful user experiences
+  ItemTransferencia(this._transferencia);
 
-We want to enable designers to deliver their full creative vision without being
-forced to water it down due to limitations of the underlying framework.
-Flutter's [layered architecture] gives you control over every pixel on the
-screen and its powerful compositing capabilities let you overlay and animate
-graphics, video, text, and controls without limitation. Flutter includes a full
-[set of widgets][widget catalog] that deliver pixel-perfect experiences on both
-iOS and Android.
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: ListTile(
+        leading: Icon(Icons.monetization_on),
+        title: Text(_transferencia.valor.toString()),
+        subtitle: Text(_transferencia.numeroConta.toString()),
+      ),
+    );
+  }
+}
+```
 
-<p align="center"><img src="https://github.com/flutter/website/blob/main/src/assets/images/docs/homepage/reflectly-hero-600px.png?raw=true" alt="Reflectly hero image"></p>
+Na página de FormulárioTransferencia() são importadas as outras páginas criadas, além da página de transferência que será utilizada no código abaixo:
 
-### Fast results
+```dart
+void _criaTransferencia(BuildContext context) {
+    final int? numeroConta = int.tryParse(
+        _controladorCampoNumeroConta.text);
+    final double? valor = double.tryParse(
+        _controladorCampoValor.text);
+    if (numeroConta != null && valor != null) {
+      final transferenciaCriada = Transferencia(valor, numeroConta);
+      debugPrint('$transferenciaCriada');
+      Navigator.pop(context, transferenciaCriada); // que vai notificar a lista
+    }
+  }
+}
+```
 
-Flutter is fast. It's powered by the same hardware-accelerated 2D graphics
-library that underpins Chrome and Android: [Skia]. We architected Flutter to
-support glitch-free, jank-free graphics at the native speed of your device.
-Flutter code is powered by the world-class [Dart platform], which enables
-compilation to 32-bit and 64-bit ARM machine code for iOS and Android, as well
-as JavaScript for the web and Intel x64 for desktop devices.
-
-<p align="center"><img src="https://github.com/flutter/website/blob/main/src/assets/images/docs/homepage/dart-diagram-small.png?raw=true" alt="Dart diagram"></p>
-
-### Productive development
-
-Flutter offers stateful hot reload, allowing you to make changes to your code
-and see the results instantly without restarting your app or losing its state.
-
-[![Hot reload animation][]][Hot reload]
-
-### Extensible and open model
-
-Flutter works with any development tool (or none at all) but includes editor
-plug-ins for both [Visual Studio Code] and [IntelliJ / Android Studio]. Flutter
-provides [thousands of packages][Flutter packages] to speed your development,
-regardless of your target platform. And accessing other native code is easy,
-with support for both [FFI] and [platform-specific APIs][platform channels].
-
-Flutter is a fully open-source project, and we welcome contributions.
-Information on how to get started can be found in our
-[contributor guide](CONTRIBUTING.md).
-
-[Flutter logo]: https://github.com/flutter/website/blob/archived-master/src/_assets/image/flutter-lockup-bg.jpg?raw=true
-[flutter.dev]: https://flutter.dev
-[Build Status - Cirrus]: https://api.cirrus-ci.com/github/flutter/flutter.svg
-[Build status]: https://cirrus-ci.com/github/flutter/flutter/master
-[Discord instructions]: https://github.com/flutter/flutter/wiki/Chat
-[Discord badge]: https://img.shields.io/discord/608014603317936148
-[Twitter handle]: https://img.shields.io/twitter/follow/flutterdev.svg?style=social&label=Follow
-[Twitter badge]: https://twitter.com/intent/follow?screen_name=flutterdev
-[layered architecture]: https://flutter.dev/docs/resources/inside-flutter
-[widget catalog]: https://flutter.dev/widgets/
-[Skia]: https://skia.org/
-[Dart platform]: https://dart.dev/
-[Hot reload animation]: https://github.com/flutter/website/blob/main/src/assets/images/docs/tools/android-studio/hot-reload.gif?raw=true
-[Hot reload]: https://flutter.dev/docs/development/tools/hot-reload
-[Visual Studio Code]: https://marketplace.visualstudio.com/items?itemName=Dart-Code.flutter
-[IntelliJ / Android Studio]: https://plugins.jetbrains.com/plugin/9212-flutter
-[Flutter packages]: https://pub.dev/flutter
-[FFI]: https://flutter.dev/docs/development/platform-integration/c-interop
-[platform channels]: https://flutter.dev/docs/development/platform-integration/platform-channels
-[interop example]: https://github.com/flutter/flutter/tree/master/examples/platform_channel
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/fd5717fd-4dfb-448c-a215-cd1042b79d8d/Untitled.png)
